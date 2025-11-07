@@ -69,3 +69,23 @@ L'encodage utilisé est le format PEM (Privacy Enhanced Mail) en Base64. L'avant
 
 On retrouve bien le modulus (n) et l'exposant public (e), sans l'exposant privé d. Disposer d'un fichier séparé pour la clé publique permet de la partager facilement sans risquer d'exposer la clé privée, et de gérer différemment les droits d'accès.
 
+### 4.2 Chiffrement asymétrique
+
+### Question 9 :
+
+Pour envoyer un message de manière confidentielle avec RSA, il faut utiliser la clé publique du destinataire pour chiffrer le message.
+
+### Question 10 :
+
+La commande pour chiffrer le fichier clair.txt avec la clé publique du voisin est :
+
+```bash
+openssl pkeyutl -encrypt -inkey pub.abranteg.pem -pubin -in clair.txt -out cipher.bin -pkeyopt rsa_padding_mode:oaep
+```
+
+Lors de la première tentative, on a rencontré une erreur "data too large for key size" car le message initial était trop grand. Avec une clé RSA de 1024 bits et le padding OAEP, on ne peut chiffrer qu'environ 86 octets maximum. On a donc réduit le contenu de clair.txt à un message plus court : "Bonjour de ...".
+
+### Question 11 :
+
+Après avoir chiffré plusieurs fois le même fichier clair.txt, on constate que les fichiers cipher.bin.1 et cipher.bin.2 ont des contenus différents. C'est le comportement attendu. Le padding OAEP (Optimal Asymmetric Encryption Padding) ajoute de l'aléatoire à chaque chiffrement, ce qui fait que le même message chiffré deux fois donne des résultats différents. C'est grace a cela que l'attaquant ne peux pas reconnaître qu'un même message a été envoyé plusieurs fois.
+
