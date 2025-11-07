@@ -89,3 +89,39 @@ Lors de la première tentative, on a rencontré une erreur "data too large for k
 
 Après avoir chiffré plusieurs fois le même fichier clair.txt, on constate que les fichiers cipher.bin.1 et cipher.bin.2 ont des contenus différents. C'est le comportement attendu. Le padding OAEP (Optimal Asymmetric Encryption Padding) ajoute de l'aléatoire à chaque chiffrement, ce qui fait que le même message chiffré deux fois donne des résultats différents. C'est grace a cela que l'attaquant ne peux pas reconnaître qu'un même message a été envoyé plusieurs fois.
 
+## 5. Analyse du contenu d'un certificat
+
+### 5.1 Certificat du site de l'UGA
+
+### Question 12 :
+
+L'option -showcerts permet d'afficher tous les certificats de la chaîne de certification envoyés par le serveur, pas seulement le certificat du serveur lui-même. Dans notre cas, le serveur a envoyé 2 certificats : son propre certificat (cert0.pem) et celui de l'autorité intermédiaire GEANT OV RSA CA 4 (cert1.pem).
+
+### Question 13 :
+
+x509 est le standard qui définit le format des certificats à clé publique. Le sujet du certificat est : C=FR, ST=Auvergne-Rhône-Alpes, O=Université Grenoble Alpes, CN=*.univ-grenoble-alpes.fr. Cette notation suit le format Distinguished Name où C = Country (pays), ST = State (région), O = Organization (organisation), CN = Common Name (nom de domaine). Le CN identifie précisément l'entité pour laquelle le certificat est délivré. L'organisme qui a délivré le certificat est GEANT OV RSA CA 4.
+
+### Question 14 :
+
+Le « s » représente le Subject (sujet du certificat, c'est-à-dire le propriétaire). Le « i » représente l'Issuer (l'émetteur, c'est-à-dire l'autorité de certification qui a signé le certificat).
+
+### Question 15 :
+
+Le certificat contient la clé publique RSA (partie publique uniquement, pas la clé privée). L'algorithme utilisé pour signer le certificat est sha384WithRSAEncryption (SHA-384 pour le hash et RSA pour la signature). L'attribut CN contient *.univ-grenoble-alpes.fr, ce qui signifie que le certificat est valable pour tous les sous-domaines. L'attribut Subject Alternative Name contient les autres noms (ici : *.univ-grenoble-alpes.fr et univ-grenoble-alpes.fr). La durée de validité est d'un an (du 18 décembre 2024 au 18 décembre 2025). Le fichier .crl (Certificate Revocation List) permet de vérifier si le certificat a été révoqué avant sa date d'expiration.
+
+### Question 16 :
+
+Le certificat de www.univ-grenoble-alpes.fr a été signé par GEANT OV RSA CA 4. La formule utilisée pour calculer la signature est : Signature = E(H(certificat), clé_privée_CA) où E est l'algorithme RSA et H est la fonction de hachage SHA-384.
+
+### Question 17 :
+
+Le sujet du certificat de la CA est : C=NL, O=GEANT Vereniging, CN=GEANT OV RSA CA 4. La taille de la clé publique est de 4096 bits. Ce certificat a été signé par USERTrust RSA Certification Authority.
+
+### Question 18 :
+
+Chaque certificat de niveau n contient dans son champ Issuer les informations du certificat de niveau n+1 qui l'a signé. Le certificat de dernier niveau (cert2 - USERTrust RSA Certification Authority) a été signé par AAA Certificate Services. Ce certificat racine se trouve dans le magasin de certificats du système dans /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt.
+
+### Question 19 :
+
+Pour le certificat racine AAA Certificate Services, les champs Subject et Issuer sont identiques, ce qui indique qu'il s'agit d'un certificat auto-signé. La formule de signature est : Signature = E(H(certificat), clé_privée_racine) où la clé privée utilisée pour signer est celle du certificat lui-même. Ce type de certificat s'appelle un certificat auto-signé ou certificat racine.
+
