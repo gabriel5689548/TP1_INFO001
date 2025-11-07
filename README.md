@@ -49,3 +49,23 @@ Maintenant que Bob fait confiance à ca1, il peut vérifier le certificat d'Alic
 **Étape 4 - Preuve de possession de la clé privée :**
 Enfin, Alice doit prouver qu'elle possède vraiment la clé privée qui correspond à la clé publique du certificat. Pour ça, elle signe les messages échangés pendant la procédure Diffie-Hellman avec sa clé privée. Bob vérifie cette signature avec la clé publique d'Alice qui est dans le certificat. Si tout est bon, l'authentification est réussie.
 
+## 4. Étude du chiffrement RSA
+
+### 4.1 Génération de clés RSA
+
+### Question 5 :
+
+Le modulus n a une longueur de 1024 bits. Pour chiffrer : C = M^e mod n. Pour déchiffrer : M = C^d mod n. Le publicExponent vaut 65537, une valeur standard facilement devinable. Ce n'est pas problématique car la sécurité de RSA repose sur l'impossibilité de retrouver d sans connaître la factorisation de n.
+
+### Question 6 :
+
+Il n'y a aucun intérêt à chiffrer une clé publique puisqu'elle est faite pour être partagée. En revanche, chiffrer la clé privée est essentiel pour la protéger en cas d'accès non autorisé à la machine.
+
+### Question 7 :
+
+L'encodage utilisé est le format PEM (Privacy Enhanced Mail) en Base64. L'avantage est qu'il utilise uniquement des caractères ASCII imprimables, ce qui permet de copier-coller facilement les clés sans risque de corruption.
+
+### Question 8 :
+
+On retrouve bien le modulus (n) et l'exposant public (e), sans l'exposant privé d. Disposer d'un fichier séparé pour la clé publique permet de la partager facilement sans risquer d'exposer la clé privée, et de gérer différemment les droits d'accès.
+
