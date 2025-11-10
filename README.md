@@ -125,3 +125,34 @@ Chaque certificat de niveau n contient dans son champ Issuer les informations du
 
 Pour le certificat racine AAA Certificate Services, les champs Subject et Issuer sont identiques, ce qui indique qu'il s'agit d'un certificat auto-signé. La formule de signature est : Signature = E(H(certificat), clé_privée_racine) où la clé privée utilisée pour signer est celle du certificat lui-même. Ce type de certificat s'appelle un certificat auto-signé ou certificat racine.
 
+## 6. Mise en place d'une PKI (Public Key Infrastructure)
+
+### 6.2 Etude de la CA Racine (CN=Root Lorne)
+
+### Question 20 :
+
+Le type de clé utilisée est une clé basée sur les courbes elliptiques (id-ecPublicKey). La taille de la clé est de 256 bits. La courbe utilisée est P-256 (aussi appelée prime256v1 ou secp256r1). La durée de validité est de 20 ans (du 1er novembre 2025 au 27 octobre 2045). Il s'agit d'un certificat racine/auto-signé car les champs Subject et Issuer sont identiques, et le Subject Key Identifier est le même que l'Authority Key Identifier. Cette autorité de certification peut être utilisée pour les usages suivants : Digital Signature, Certificate Sign, CRL Sign.
+
+### 6.3 Création d'une autorité de certification intermédiaire
+
+### Question 21 :
+
+La valeur mise dans le paramètre dir de la section CA_default est : /home/etudiant/ca. La clé privée de la CA devra être stockée dans /home/etudiant/ca/private/intermediate.key.pem. Le certificat de la CA devra être stocké dans /home/etudiant/ca/certs/intermediate.cert.pem.
+
+### Question 22 :
+
+La commande saisie pour créer la clé est :
+```bash
+openssl genrsa -aes128 -out private/intermediate.key.pem 3072
+```
+
+### Question 23 :
+
+La demande de certificat contient déjà une signature car elle doit prouver que le demandeur possède bien la clé privée correspondant à la clé publique présente dans la demande. Cette signature permet à l'autorité de certification de vérifier que la demande provient bien du propriétaire légitime de la clé privée, et garantit l'intégrité de la demande pendant son transport.
+
+### 6.4 Création du certificat du serveur
+
+### Question 24 :
+
+Il est pertinent de générer la clé de chiffrement asymétrique sur la machine serveur elle-même (tls-serv-votre_login). Cela permet de garantir que la clé privée ne transite jamais sur le réseau et reste uniquement sur la machine qui en a besoin, renforçant ainsi la sécurité.
+
