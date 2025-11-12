@@ -156,3 +156,23 @@ La demande de certificat contient déjà une signature car elle doit prouver que
 
 Il est pertinent de générer la clé de chiffrement asymétrique sur la machine serveur elle-même (tls-serv-votre_login). Cela permet de garantir que la clé privée ne transite jamais sur le réseau et reste uniquement sur la machine qui en a besoin, renforçant ainsi la sécurité.
 
+## 7. Mise en place d'un reverse proxy
+
+### 7.3 Mise en place de ssl
+
+### 7.3.2 Mise en place de la chaîne de confiance de certificat
+
+### Question 25 :
+
+Faire confiance à la CA racine est la solution la plus pertinente car elle offre une portabilité maximale : tous les certificats émis par les autorités intermédiaires (actuelles et futures) seront automatiquement validés. Cela réduit considérablement l'administration en évitant de déployer chaque certificat individuellement sur les machines clientes. C'est aussi le modèle PKI standard utilisé sur Internet où seuls les certificats racines sont stockés dans les systèmes d'exploitation et navigateurs. Enfin, cela facilite la gestion de la sécurité puisqu'on peut révoquer ou retirer une racine pour invalider immédiatement toute la hiérarchie.
+
+### Question 26 :
+
+La ligne ajoutée dans le fichier /etc/hosts est :
+```
+127.0.0.1   www.abranteg.fr
+```
+Cette modification permet de résoudre le nom de domaine www.abranteg.fr vers l'adresse locale 127.0.0.1, évitant ainsi l'erreur de validation du certificat qui était délivré pour ce nom et non pour l'adresse IP.
+
+## 8. Développement d'un client Web
+
